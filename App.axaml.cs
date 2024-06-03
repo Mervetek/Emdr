@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using MoveObject.ViewModels;
 using MoveObject.Views;
+using Splat;
 
 namespace MoveObject;
 
@@ -17,10 +18,11 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(),
-            };
+            var mainWindow = new MainWindow();
+            desktop.MainWindow = mainWindow;
+
+            var viewModel = new MainWindowViewModel();
+            mainWindow.DataContext = viewModel;
         }
 
         base.OnFrameworkInitializationCompleted();

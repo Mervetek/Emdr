@@ -8,21 +8,33 @@ public class MovingObjectViewModel : ReactiveObject
 {
     private double _xPosition;
     private double _yPosition;
+    private const double StepSize = 5.0; // Hareket adım büyüklüğü
     private SolidColorBrush _color;
+    private double _screenWidth = 800;
+    private double _objectWidth = 10;
 
     public MovingObjectViewModel()
     {
-        
         // Default değerler
         XPosition = 0;
         YPosition = 0;
         Color = SolidColorBrush.Parse("#FF0000"); // Siyah renk atanıyor.
         
-        MoveCommand = ReactiveCommand.Create(() =>
+        MoveCommand = ReactiveCommand.Create(MoveStep);
+
+    }
+
+
+    private void MoveStep()
+    {
+        // Nesnenin XPosition özelliğini adım büyüklüğü kadar artır
+        XPosition += StepSize;
+
+        // Ekranın sağ kenarına ulaşıldığında nesneyi ekranın soluna geri götür
+        if (XPosition >= (_screenWidth - _objectWidth))
         {
-            // Komut işlemleri burada gerçekleştirilir
-            Move(10, 10); // Örnek olarak, nesneyi 10 birim sağa ve aşağıya taşıyalım
-        });
+            XPosition = 0;
+        }
     }
 
 
@@ -43,13 +55,7 @@ public class MovingObjectViewModel : ReactiveObject
         get => _color;
         set => this.RaiseAndSetIfChanged(ref _color, value);
     }
-    
-    public void Move(double deltaX, double deltaY)
-    {
-        XPosition += deltaX;
-        YPosition += deltaY;
-    }
-    
+
     public ReactiveCommand<Unit, Unit> MoveCommand { get; set; }
 
 }
